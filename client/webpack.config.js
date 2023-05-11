@@ -2,7 +2,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const WebpackPwaManifest = require('webpack-pwa-manifest');
 const path = require('path');
 const { InjectManifest } = require('workbox-webpack-plugin');
-
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 module.exports = () => {
   return {
@@ -14,18 +14,14 @@ module.exports = () => {
     output: {
       filename: '[name].bundle.js',
       path: path.resolve(__dirname, 'dist'),
+      publicPath: ""
     },
     plugins: [
       new HtmlWebpackPlugin({
         template: './index.html',
-        title: 'J.A.T.E.'
+        favicon: "./favicon.ico"
       }),
      
-      // Injects our custom service worker
-      new InjectManifest({
-        swSrc: './src-sw.js',
-        swDest: 'src-sw.js',
-      }),
 
       // Creates a manifest.json file.
       new WebpackPwaManifest({
@@ -45,6 +41,12 @@ module.exports = () => {
             destination: path.join('assets', 'icons'),
           },
         ],
+      }),
+      new MiniCssExtractPlugin({filename: 'style.css'}),
+      // Injects our custom service worker
+      new InjectManifest({
+        swSrc: './src-sw.js',
+        swDest: 'src-sw.js',
       }),
     ],
 
